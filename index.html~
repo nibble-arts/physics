@@ -26,7 +26,7 @@
 		</div>
 
 		<div id="table"></div>
-		<div id="message"><span id="id"></span> = X: <span id="x"></span>, Y: <span id="y"></span></div>
+		<div id="message"><span id="id">Object</span> = X: <span id="x"></span>, Y: <span id="y"></span></div>
 
 <!--		<canvas id="table" width="1000x" height="700px">
     	Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.

@@ -1,0 +1,36 @@
+(function() {
+	Kinetic.Physics = function(config) {
+		this.___init(config);
+	};
+
+	Kinetic.Physics.prototype = {
+		gravity: { x: 0,y: 0 },
+		damping: 0,
+		forceRadius: 0,
+
+		___init: function (config) {
+		},
+
+		getDamping: function () {
+			return this.damping;
+		},
+
+		getGravity: function () {
+			return this.gravity;
+		},
+	};
+
+	Kinetic.Shape.prototype = {
+		dumping: 0,
+		forceRadius: 0,
+		
+		getDumping: function (config) {
+			return this.dumping;
+		},
+
+		getForceRadius: function (config) {
+			return this.forceRadius;
+		},
+	}
+
+})();
