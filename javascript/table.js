@@ -2,6 +2,11 @@
 var stage;
 var stageWidth;
 var stageHeight;
+var margin = 100;
+var title = [
+"","Glas","Roboterhund","Bergwerksmünze","Untertasse","Untersetzer","Celluloselack","Kunstharz E1","Warenprobe","Bahnhof Semmering","Bergbaubetrieb","Correspondenzkarte","Tunnelquerschnitte","Nordwestbahnhof","Donaubrücke bei Wien","Wecker","Anzeigeapparat","Signalgeber","Setzkasten","Setzkastenlade","Hafenschlepper","Schalldose","Tastatus","Zungen","Dampflok-Lenkgestell","Correspondenzkarte Italien","Space Zentrifuge","Vermessungsarbeiten","Zillertalbahn","Ausstellung für Fremdenverkehr","Leiterplatte"
+];
+
 
 //================================================================
 // create stage with objects
@@ -11,13 +16,14 @@ function load() {
 	stageHeight = $(document).height();
 
 	var boxSizeMin = 150;
-	var boxSizeMax = 300;
+	var boxSizeMax = 250;
 	var boxAspect = 1.5;
 
 	var imageObj = new Array;
 	var image = new Array;
 	
 
+//================================================================
 // create kinetic stage
 	stage = new Kinetic.Stage({
 		container: "table",
@@ -27,23 +33,42 @@ function load() {
 		strokeWidth: 1,
 	});
 
-	var layer = new Kinetic.Layer();
 
-	for (i = 1;i < 30;i++) {
-		var x = Random(200,stageWidth-200);
-		var y = Random(200,stageHeight-200);
-		var angle = Random(-45,45);
+//================================================================
+// create layer
+	var layer = new Kinetic.Layer();
+	var background = new Kinetic.Layer();
+
+	var back = new Kinetic.Rect({
+		x: 0,
+		y: 0,
+		width: stageWidth,
+		height: stageHeight,
+		fill: "#f5f5ff",
+		
+	});
+
+	background.add(back);
+	stage.add(background);
+
+//================================================================
+// create objects
+	for (i = 1;i <= 30;i++) {
+		var angle = Random(-25,25);
 
 		var width = Random(boxSizeMin,boxSizeMax);
 		var height = Random(boxSizeMin / boxAspect,boxSizeMax / boxAspect);
+
+		var x = Random(margin + (width / 2),stageWidth - margin);
+		var y = Random(margin + (height / 2),stageHeight - margin);
 
 		var forceRadius = new Vector(width,height).abs();
 
 		var color = "rgb("+Random(0,255)+","+Random(0,255)+","+Random(0,255)+")";
 
-//================================================================
 // create objects
 		var group = new Kinetic.Group({
+			id: "group_"+i,
 			"name": "group_"+i,
 			x: x,
 			y: y,
@@ -66,17 +91,17 @@ function load() {
 		  },
 			fixed: false,
 			forceRadius: forceRadius/2,
-			damping: 5,
-			friction: 0.2,
-			maxSpeed: 5,
-			rotMin: -45,
-			rotMax: 45,
+			damping: 4,
+			maxSpeed: 12,
+			rotMin: -25,
+			rotMax: 25,
 		});
 
 
 //-----------------------------------------------------------------
 // backgroud box
 		var box = new Kinetic.Rect({
+			id: "box_"+i,
 			"name": "box_"+i,
 			x: 0,
 			y: 0,
@@ -97,38 +122,19 @@ function load() {
 
 //-----------------------------------------------------------------
 // image
-		imageObj[i] = new Image();
-
-		imageObj[i].onload = function () {
-
-			image = new Kinetic.Image({
-				name: "image_"+i,
-				alt: "Image "+i,
-				image: imageObj[i],
-				x: 0,
-				y: 20,
-				width: width-2,
-				height: height-22,
-				offsetX: width/2-1,
-				offsetY: height/2-1,
-			});
-
-			group.add(image);
-		}
-		
-		if (i < 10)
-			imageObj[i].src = "images/00"+i+".jpg";
-		else
-			imageObj[i].src = "images/0"+i+".jpg";
+		var imageObj = new Image();
+		addImage(i,imageObj,Math.max(width,height),group,layer);
 
 
 //-----------------------------------------------------------------
 // text
 		var text = new Kinetic.Text({
+			id: "text_"+i,
+			"name": "text_"+i,
       x: -width/2 + 5,
       y: -height/2 + 5,
-      text: "Box "+i,
-      fontSize: 12,
+      text: title[i],
+      fontSize: 10,
       fontFamily: "Calibri",
       fill: "black",
       align: "center",
@@ -142,7 +148,7 @@ function load() {
 //================================================================
 // set drag animation
 		group.on("dragstart", function () {
-			resetNodes(this);
+//			resetNodes(this);
 		});
 
 		group.on("dragend", function () {
@@ -155,6 +161,7 @@ function load() {
 //================================================================
 // set click events
 		group.on("click", function () {
+
 			if (this.getScaleX() > 1)
 				resetNodes();
 			else {
@@ -187,7 +194,70 @@ function load() {
 }
 
 
+//================================================================
+// add an image to a group
+function addImage(id,imageObj,size,group,layer) {
+	imageObj.onload = function () {
 
+		var imgSize = Math.max(imageObj.width,imageObj.height);
+
+		var width = Math.round(imageObj.width / imgSize * size);
+		var height = Math.round(imageObj.height / imgSize * size);
+
+
+		image = new Kinetic.Image({
+			id: "image_"+id,
+			"name": "image_"+id,
+			image: this,
+			x: 0,
+			y: 20,
+			width: width-2,
+			height: height-2,
+			offsetX: width/2-1,
+			offsetY: height/2-1,
+		});
+
+		group.add(image);
+		layer.add(group);
+
+
+// resize group
+		var shape = stage.find("#group_"+id);
+		shape.setWidth(width);
+		shape.setOffsetX(width/2);
+
+		shape.setHeight(height + 20);
+		shape.setOffsetY(height/2);
+
+
+// resize box
+		var shape = stage.find("#box_"+id);
+		shape.setWidth(width);
+		shape.setOffsetX(width/2);
+
+		shape.setHeight(height + 20);
+		shape.setOffsetY(height/2);
+
+
+// resize text
+		var shape = stage.find("#text_"+id);
+		shape.position( {x: (-width/2 + 5),y: (-height/2 + 5) } );
+
+
+// redraw layer
+		layer.draw();
+	}
+
+	if (i < 10)
+		imageObj.src = "images/00"+i+".jpg";
+	else
+		imageObj.src = "images/0"+i+".jpg";
+}
+
+
+
+
+//================================================================
 //================================================================
 // reset scale and set random rotation to all nodes exept node
 function resetNodes(node) {
@@ -203,8 +273,8 @@ function resetNodes(node) {
 				  node: shape, 
 				  duration: 1,
 					rotation: Random(-45,45),
-					x: Random(150,stageWidth-150),
-					y: Random(150,stageHeight-150),
+					x: Random(margin + shape.getOffsetX(),stageWidth - margin),
+					y: Random(margin + shape.getOffsetY(),stageHeight - margin),
 					scaleX: 1,
 					scaleY: 1,
 				  easing: Kinetic.Easings.EaseIn
