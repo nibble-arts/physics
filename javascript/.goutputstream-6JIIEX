@@ -100,174 +100,21 @@ function load() {
 
 
 //-----------------------------------------------------------------
-//-----------------------------------------------------------------
-		var bubbleText = new Kinetic.Text({
-			x: 5,
-			y: 5,
-			text: "ähnliche Dinge",
-			fontSize: 10,
-			fontFamiliy: "Calibri",
-			fill: "grey",
-		});
-
-		var bubbleBox = new Kinetic.Rect({
-			x: 0,
-			y: 0,
-			width: bubbleText.width()+10,
-			height: 20,
-			stroke: "black",
-			strokeWidth: 1,
-			fill: "#fffff0",
-		});
-
-		var bubbleGroup = new Kinetic.Group({
-			id: "bubble2_"+i,
-			"name": "bubble_"+i,
-			x: 0,
-			y: 5,
-			width: bubbleText.width()+10,
-			height: 20,
-			moveX: -bubbleText.width()-10,
-			moveY: 0,
-			offsetX: width/2,
-			offsetY: height/2,
-		});
-
-		bubbleGroup
-			.add(bubbleBox)
-			.add(bubbleText)
-			.on("click", function () {
-				alert("Zeige ähnliche Dinge");
-			});
-
-		group.add(bubbleGroup);
-		
-//-----------------------------------------------------------------
-		var bubbleText = new Kinetic.Text({
-			x: 5,
-			y: 5,
-			text: "verwandte Themen",
-			fontSize: 10,
-			fontFamiliy: "Calibri",
-			fill: "grey",
-		});
-
-		var bubbleBox = new Kinetic.Rect({
-			x: 0,
-			y: 0,
-			width: bubbleText.width()+10,
-			height: 20,
-			stroke: "black",
-			strokeWidth: 1,
-			fill: "#fffff0",
-		});
-
-		var bubbleGroup = new Kinetic.Group({
-			id: "bubble2_"+i,
-			"name": "bubble_"+i,
-			x: 0,
-			y: 30,
-			width: bubbleText.width()+10,
-			height: 20,
-			moveX: -bubbleText.width()-10,
-			moveY: 0,
-			offsetX: width/2,
-			offsetY: height/2,
-		});
-
-		bubbleGroup
-			.add(bubbleBox)
-			.add(bubbleText)
-			.on("click", function () {
-				alert("Zeige verwandte Themen");
-			});
-
-		group.add(bubbleGroup);
-
-//-----------------------------------------------------------------
-		var bubbleText = new Kinetic.Text({
-			x: 5,
-			y: 5,
-			text: "verknüpfte Personen",
-			fontSize: 10,
-			fontFamiliy: "Calibri",
-			fill: "grey",
-		});
-
-		var bubbleBox = new Kinetic.Rect({
-			x: 0,
-			y: 0,
-			width: bubbleText.width()+10,
-			height: 20,
-			stroke: "black",
-			strokeWidth: 1,
-			fill: "#fffff0",
-		});
-
-		var bubbleGroup = new Kinetic.Group({
-			id: "bubble2_"+i,
-			"name": "bubble_"+i,
-			x: 0,
-			y: 55,
-			width: bubbleText.width()+10,
-			height: 20,
-			moveX: -bubbleText.width()-10,
-			moveY: 0,
-			offsetX: width/2,
-			offsetY: height/2,
-		});
-
-		bubbleGroup
-			.add(bubbleBox)
-			.add(bubbleText)
-			.on("click", function () {
-				alert("Zeige verknüpfte Personen");
-			});
-
-		group.add(bubbleGroup);
-
-
-//-----------------------------------------------------------------
-		var bubbleText = new Kinetic.Text({
-			x: 5,
-			y: 5,
-			text: "Ich bin jetzt ein Text, der sich\nmit dem Ding genauer befasst.\nHier stehen Geschichten, Hintergründe,\ntechnische Details, oder sonst\nnoch irgend ein Schmus.",
-			fontSize: 8,
-			fontFamiliy: "Calibri",
-			fill: "grey",
-		});
-
-		var bubbleBox = new Kinetic.Rect({
-			x: 0,
-			y: 0,
-			width: bubbleText.width()+10,
-			height: bubbleText.height()+10,
-			stroke: "black",
+		var bubble = new Kinetic.Circle({
+			id: "bubble_"+i,
+			name: "bubble_"+i,
+			x: -30,
+			y: -20,
+			moveX: 0,
+			moveY: 40,
+			offsetX: -width/2,
+			offsetY: -height/2,
+			radius: 20,
+			stroke: "#8080d0",
 			strokeWidth: 1,
 			fill: "white",
 		});
-
-		var bubbleGroup = new Kinetic.Group({
-			id: "bubble2_"+i,
-			"name": "bubble_"+i,
-			x: 0,
-			y: 0,
-			width: width,
-			height: bubbleText.height()+10,
-			moveX: 0,
-			moveY: -bubbleText.height()-10,
-			offsetX: width/2,
-			offsetY: height/2,
-		});
-
-		bubbleGroup
-			.add(bubbleBox)
-			.add(bubbleText)
-			.on("click", function () {
-				alert("Zeige verknüpfte Personen");
-			});
-
-		group.add(bubbleGroup);
+		group.add(bubble);
 
 
 //-----------------------------------------------------------------
@@ -295,7 +142,7 @@ function load() {
 //-----------------------------------------------------------------
 // image
 		var imageObj = new Image();
-		addImage(i,imageObj,Math.max(width,height),group,layer);
+//		addImage(i,imageObj,Math.max(width,height),group,layer);
 
 
 //-----------------------------------------------------------------
@@ -358,7 +205,10 @@ function load() {
 
 // move out bubble
 // get bubble
-				moveBubbleOut(this.getId().index());
+				var id = this.getId().split("_");
+				id = id[1];
+
+				moveBubble (id[1],"out");
 
 				this.moveToTop();
 				layer.draw();
@@ -372,49 +222,31 @@ function load() {
 }
 
 
-String.prototype.index = function () {
-	var id = this.split("_");
-	return id[1];
-}
-
-
 //================================================================
 // move bubbles for group i in/out
-function moveBubbleIn(id) {
-	_moveBubble (id,"in");
-}
-
-
-function moveBubbleOut(id) {
-	_moveBubble (id,"out");
-}
-
-
-function _moveBubble (id,dir) {
+function moveBubble (id,dir) {
 	var dx;
 	var dy;
+	
+	var bubble = stage.find("#bubble_"+id);
+	bubble = bubble[0];
 
-	var bubble = stage.find(".bubble_"+id);
-
-	bubble.each(function (shape) {
-
-		if (dir == "out") {
-			dx = shape.getAttr("moveX");
-			dy = shape.getAttr("moveY");
-		}
-		if (dir == "in") {
-			dx = -shape.getAttr("moveX");
-			dy = -shape.getAttr("moveY");
-		}
-
-		new Kinetic.Tween({
-		  node: shape, 
-		  duration: 1,
-			x: shape.getX() + dx,
-			y: shape.getY() + dy,
-		  easing: Kinetic.Easings.EaseIn
-		}).play();
-	});
+	if (dir == "out") {
+		dx = bubble.getAttr("moveX");
+		dy = bubble.getAttr("moveY");
+	}
+	if (dir == "in") {
+		dx = -bubble.getAttr("moveX");
+		dy = -bubble.getAttr("moveY");
+	}
+	
+	new Kinetic.Tween({
+    node: bubble, 
+    duration: 1,
+		x: bubble.getX() + dx,
+		y: bubble.getY() + dy,
+    easing: Kinetic.Easings.EaseIn
+  }).play();
 }
 
 
@@ -468,19 +300,19 @@ function addImage(id,imageObj,size,group,layer) {
 		shape.position( {x: (-width/2 + 5),y: (-height/2 + 5) } );
 
 
-// reposition bubbles
-		var shape = stage.find(".bubble_"+id);
-		shape.setOffsetX(width/2);
-		shape.setOffsetY(height/2);
-
-
 // redraw layer
 		layer.draw();
 	}
 
 	if (i < 10)
 		imageObj.src = "images/00"+i+".jpg";
-	else
+	else// get bubble
+			var id = this.getId().split("_");
+			id = id[1];
+			var bubble = stage.find("#bubble_"+id);
+			bubble = bubble[0];
+
+
 		imageObj.src = "images/0"+i+".jpg";
 }
 
@@ -509,8 +341,6 @@ function resetNodes(node) {
 					scaleY: 1,
 				  easing: Kinetic.Easings.EaseIn
 				}).play();
-
-				moveBubbleIn(shape.getId().index());
 			}
 		}
 	});

@@ -231,7 +231,7 @@ function load() {
 		var bubbleText = new Kinetic.Text({
 			x: 5,
 			y: 5,
-			text: "Ich bin jetzt ein Text, der sich\nmit dem Ding genauer befasst.\nHier stehen Geschichten, Hintergründe,\ntechnische Details, oder sonst\nnoch irgend ein Schmus.",
+			text: "Ich bin jetzt ein Text, der sich mit dem Ding genauer befasst. Hier stehen Geschichten, Hintergründe, technische Details, oder sonst noch irgend ein Schmus.",
 			fontSize: 8,
 			fontFamiliy: "Calibri",
 			fill: "grey",
